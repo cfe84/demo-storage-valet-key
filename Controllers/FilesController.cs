@@ -19,20 +19,23 @@ namespace demo_storage_valet_key.Controllers
         [HttpGet("{name}/downloadUrl")]
         public async Task<ActionResult<StorageUrl>> GetDownloadUrlAsync(string name)
         {
-            // IRL you would validate access rights before returning the SAS.
+            // IRL you would validate access rights before returning the SAS,
+            // probably in a middleware.
             return await storageProvider.GetDownloadUrlAsync(name);
         }
 
         [HttpGet("{name}/uploadUrl")]
         public async Task<ActionResult<StorageUrl>> GetUploadUrlAsync(string name)
         {
-            // IRL you would validate access rights before returning the SAS.
+            // IRL you would validate access rights before returning the SAS,
+            // probably in a middleware.
             return await storageProvider.GetUploadUrlAsync(name);
         }
 
         public async Task<ActionResult<string[]>> ListFilesAsync()
         {
-            return (await storageProvider.GetFileListAsync()).ToArray();
+            var fileList = await storageProvider.GetFileListAsync();
+            return fileList.ToArray();
         }
     }
 }

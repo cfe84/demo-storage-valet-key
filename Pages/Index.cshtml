@@ -4,9 +4,29 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Upload a file</h1>
-    <input type="file" id="file"/><button onclick="uploadFile()">Upload</button>
+    <div>
+        To upload a file, the webpage is asking for a write-only Shared Access Signature (SAS) from the API.
+        This SAS allows its bearer to write directly to Blob storage for a limited period of time (in this
+        demo, 15 minutes). The webpage then uses that URL with the Azure Blob Storage SDK to upload the file,
+        possibly doing so in multiple blocks (this is abstracted away from you, so there's no complexity
+        there).
+    </div>
+    <br/>
+    <div>
+        <span><input type="file" id="file"/><button onclick="events.uploadFileButtonClicked()">Upload</button></span>
+        <span>
+            <span style="width:250px; height: 10px; display: block; border: 1pt solid gray; "><span id="progress" style="height: 100%; display: block; width: 0%; background-color: green"></span></span>
+        </span>
+    </div>
     <h1 class="display-4">Files</h1>
-    <div id="files"></div>
+    <div>
+        To download a file, the webpage is asking the API for a read-only SAS, then redirects the browser
+        to this URL, which triggers the download directly from blob storage.<br/>
+    </div>
+    <br/>
+    <div>
+        <ul id="files"></ul>
+    </div>
 </div>

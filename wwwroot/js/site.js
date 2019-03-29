@@ -1,11 +1,7 @@
-﻿function callBackendAsync(apiUrl,
-    method = "GET", 
-    body = null, 
-    contentType = "application/json", 
-    headers = []) {
+﻿function callBackendAsync(apiUrl) {
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
-        xhttp.open(method, "/api" + apiUrl, true);
+        xhttp.open("GET", "/api" + apiUrl, true);
         xhttp.onreadystatechange = () => {
             if(xhttp.readyState === XMLHttpRequest.DONE) {
                 if (xhttp.status === 200) {
@@ -17,19 +13,11 @@
                     }
                 }
                 else {
-                    reject({
-                        status: 200
-                    })
+                    reject({ status: xhttp.status });
                 }
             }
         };
-        if (body) {
-            xhttp.setRequestHeader("content-type", contentType);
-        }
-        for(let header of headers) {
-            xhttp.setRequestHeader(header.header, header.value);
-        }
-        xhttp.send(body);
+        xhttp.send();
     })
 }
 
@@ -45,38 +33,55 @@ const operations = {
     }
 }
 
-const uploadFile = () => {
-    const fileUploadElement = document.getElementById('file');
-    const file = fileUploadElement.files[0];
+const uploadFile = (file) => {
     operations.getUploadUrlAsync(file.name).then((url) => {
-        const customBlockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
+        const KIBIBYTE = 1024;
+        const MEBIBYTE = 1024 * KIBIBYTE;
+        // Sizing in chunks of 4MB for large files, 512kb for smaller files.
+        const options = { blockSize : file.size >  32 * MEBIBYTE ? 4 * MEBIBYTE : 512 * KIBIBYTE };
         const blobService = AzureStorage.Blob.createBlobServiceWithSas(url.account, url.sas);
-        blobService.singleBlobPutThresholdInBytes = customBlockSize;
-        blobService.createBlockBlobFromBrowserFile(url.container, file.name, file, {blockSize : customBlockSize}, function(error, result, response) {
+        blobService.singleBlobPutThresholdInBytes = options.blockSize;
+        const upload = blobService.createBlockBlobFromBrowserFile(url.container, file.name, file, options, (error) => {
             if (error) {
                 alert(error);
             } else {
-                refreshFiles();
+                events.refreshFiles();
             }
         });
+
+        const progressElement = document.getElementById("progress");
+        upload.on("progress", () => {
+            const progress = upload.getCompletePercent();
+            progressElement.style.width = `${progress}%`;
+        })
     })
 }
 
 const downloadFile = (filename) => {
-    operations.getFileDownloadUrlAsync(filename).then((url) => {
-        window.location.href = url.url;
-    })
+    operations.getFileDownloadUrlAsync(filename)
+        .then((url) => {
+            window.location.href = url.url;
+        })
+        .catch((error) => alert(error))
 }
 
-const refreshFiles = () => {
-    operations.listFilesAsync()
-        .then((files) => {
-            document.getElementById("files").innerHTML = files
-                .map((file) => `<div onclick="downloadFile('${file}')">${file}</div>`)
-                .join("\n");
-        })
+const events = {
+    uploadFileButtonClicked: () => {
+        const fileUploadElement = document.getElementById('file');
+        const file = fileUploadElement.files[0];
+        uploadFile(file);
+    },
+    refreshFiles: () => {
+        operations.listFilesAsync()
+            .then((files) => {
+                document.getElementById("files").innerHTML = files
+                    .map((file) => `<li><a href="#" onclick="downloadFile('${file}')">${file}</a></li>`)
+                    .join("\n");
+                })
+            .catch((error) => alert(error));
+    }
 }
 
 window.onload = () => {
-    refreshFiles();
+    events.refreshFiles();
 }
