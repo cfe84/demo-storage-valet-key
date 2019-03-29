@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 appsettings.Development.json
+appsettings.json
 cleanup.sh
 
 # User-specific files (MonoDevelop/Xamarin Studio)
