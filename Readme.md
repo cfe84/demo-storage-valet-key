@@ -43,6 +43,12 @@ they are requesting, before issuing SAS or file list.
 This demo contains a provisioning script that will automatically provision the necessary
 resources and deploy the application. You need an Azure Subscription for that.
 
+The provisioning script will create:
+- A resource group
+- A storage account
+- A free app service plan
+- A webapp in that service plan.
+
 For it to work you have two options:
 
 1. **If you have the Azure CLI installed and setup on a Linux terminal on your machine (either Linux,
@@ -53,9 +59,12 @@ For it to work you have two options:
 2. **If you don't have the Azure CLI installed**, go to the [Azure Shell](https://shell.azure.com),
     select the subscription on which you want to provision the demo, then select "Bash" as
     the shell type, and finally, run 
-    `git clone https://github.com/cfe84/demo-storage-valet-key.git && cd demo-storage-valet-key && ./provision.sh`.
+    `git clone https://github.com/cfe84/demo-storage-valet-key.git && cd demo-storage-valet-key && chmod +x provision.sh && ./provision.sh`.
 
 # To cleanup the demo
+
+Overall the resources created for that demo are free or practically free. However there's 
+no security setup so you should delete the resources after you are done.
 
 The provisioning script creates a cleanup script to delete all the resources it created.
 
