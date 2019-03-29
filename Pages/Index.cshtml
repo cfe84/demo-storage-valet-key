@@ -1,0 +1,12 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Upload a file</h1>
+    <input type="file" id="file"/><button onclick="uploadFile()">Upload</button>
+    <h1 class="display-4">Files</h1>
+    <div id="files"></div>
+</div>
