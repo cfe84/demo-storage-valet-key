@@ -41,15 +41,19 @@ they are requesting, before issuing SAS or file list.
 # To deploy the demo
 
 This demo contains a provisioning script that will automatically provision the necessary
-resources and deploy the application. For it to work you have two options:
+resources and deploy the application. You need an Azure Subscription for that.
 
-1. If you have the Azure CLI installed on your machine, then make sure you are currently
-    selecting the subscription on which you want the demo to be deployed, then simply run
-    `./provision.sh`.
+For it to work you have two options:
 
-2. If you don't have the Azure CLI installed, go to the [Azure Shell](https://shell.azure.com),
+1. **If you have the Azure CLI installed and setup on a Linux terminal on your machine (either Linux,
+    a VM, or the WSL)**. then make sure you are currently
+    selecting the subscription on which you want the demo to be deployed, clone the Git repo,
+    then simply run `./provision.sh`.
+
+2. **If you don't have the Azure CLI installed**, go to the [Azure Shell](https://shell.azure.com),
     select the subscription on which you want to provision the demo, then select "Bash" as
-    the shell type, and finally, run ``.
+    the shell type, and finally, run 
+    `git clone https://github.com/cfe84/demo-storage-valet-key.git && cd demo-storage-valet-key && ./provision.sh`.
 
 # To cleanup the demo
 
