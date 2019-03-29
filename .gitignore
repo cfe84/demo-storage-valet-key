@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+appsettings.Development.json
+cleanup.sh
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
