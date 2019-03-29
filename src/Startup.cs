@@ -30,9 +30,14 @@ namespace demo_storage_valet_key
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-            var appSettings = Configuration.Get<AppSettings>();
-            services.AddSingleton<IStorageProvider>(new AzureBlobStorage(appSettings.Storage.ConnectionString, appSettings.Storage.ContainerName));
+            var connectionString = Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING");
+            var containerName = Environment.GetEnvironmentVariable("CONTAINER_NAME");
+            if (string.IsNullOrEmpty(connectionString)) {
+                var appSettings = Configuration.Get<AppSettings>();
+                connectionString = appSettings.Storage.ConnectionString;
+                containerName = appSettings.Storage.ContainerName;
+            }
+            services.AddSingleton<IStorageProvider>(new AzureBlobStorage(connectionString, containerName));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

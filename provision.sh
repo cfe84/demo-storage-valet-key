@@ -75,6 +75,7 @@ az appservice plan create -g $RGNAME -n $WEBAPPNAME --sku FREE --location $LOCAT
 echo "Creating webapp $WEBAPPNAME"
 HOSTNAME=`az webapp create -g $RGNAME -n $WEBAPPNAME --plan $WEBAPPNAME --deployment-local-git --query "defaultHostName" -o tsv`
 GITURL="https://$DEPLOYMENTUSERNAME:$DEPLOYMENTPASSWORD@$WEBAPPNAME.scm.azurewebsites.net/$WEBAPPNAME.git"
+az webapp config appsettings set --name $WEBAPPNAME -g $RGNAME --settings STORAGE_CONNECTION_STRING="$APPSTORAGECONNECTIONSTRING" CONTAINER_NAME="$UPLOADCONTAINERNAME" > /dev/null
 echo "Setting up CORS on webapp $WEBAPPNAME"
 az storage cors add --methods GET HEAD PUT --origins '*' --services b --account-name $APPSTORAGENAME --allowed-headers '*' --exposed-headers '*' --max-age 86000
 echo "Deploying webapp"
