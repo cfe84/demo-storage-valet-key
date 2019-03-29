@@ -33,7 +33,7 @@ namespace demo_storage_valet_key
 
             var appSettings = Configuration.Get<AppSettings>();
             services.AddSingleton<IStorageProvider>(new AzureBlobStorage(appSettings.Storage.ConnectionString, appSettings.Storage.ContainerName));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
